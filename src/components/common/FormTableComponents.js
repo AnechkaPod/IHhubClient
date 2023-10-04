@@ -43,10 +43,14 @@ const FormTableComponents = (props) => {
     const { data } = await addItem(rowsUrl, obj)
     setRows([...rows, obj]);
   }
-  const deleteRow = async (id) => {
+  const deleteRow =  (id) => {
     console.log(" deleteRow  id: " + id);
-    const { data } = await deleteItem(rowsUrl, id)
-    setRows(rows.filter((item) => item.id !== id));
+    deleteItem(rowsUrl, id).then(()=>{
+      setRows(rows.filter((item) => item.id !== id));
+    }).catch((error) => {
+      // Handle the error here
+      console.error("An error occurred in deleteRow:", error);
+    });
   }
   const updateRow = (obj) => {
     updateItem(rowsUrl, obj.id, obj).then(() => {
@@ -67,16 +71,22 @@ const FormTableComponents = (props) => {
   }
 
   const getAllRows = () => {
-    const { data } = getAll(rowsUrl).then((response) => {
+    getAll(rowsUrl).then((response) => {
+      
       setRows(response.data);
     }).catch((error) => {
       // Handle the error here
       console.error("An error occurred in getAllRows:", error);
     });
   }
-  const getAllColumns = async () => {
-    const { data } = await getAll(clumnsUrl);
-    setClumns(data.objectsList);
+  const getAllColumns =  () => {
+    getAll(clumnsUrl).then((response)=>{
+      setClumns(response.data.objectsList);
+    }).catch((error) => {
+      // Handle the error here
+      console.error("An error occurred in getAllRows:", error);
+    });
+   
   }
 
   return (

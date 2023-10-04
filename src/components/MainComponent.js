@@ -6,6 +6,7 @@ import TabsComponent from './TabsComponent';
 import { getAll, addItem, updateItem, deleteItem } from '../utils';
 
 const MainComponent = () => {
+
   const [value, setValue] = React.useState(1);//setting the first menu id to be maafyanim
   const [menus, setMenus] = React.useState([]);
   const [subMenus, setSubMenus] = React.useState([]);
