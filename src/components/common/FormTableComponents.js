@@ -35,13 +35,25 @@ const FormTableComponents = (props) => {
     }
   }, [props.menu]);
 
-  const addRow = async (obj) => {
+  const addRow =  (obj) => {
     console.log("addRow");
     obj.id = 0;
     obj[props.idField] = 0;
     console.log(obj);
-    const { data } = await addItem(rowsUrl, obj)
-    setRows([...rows, obj]);
+
+    addItem(rowsUrl, obj).then((response)=>{
+      console.error("row added");
+      console.error(response.data);
+      //rows[rows.length - 1].id = response.data.id;
+      console.error("rows");
+      console.error(rows);
+      setRows([...rows, response.data]);
+    }).catch((error) => {
+      // Handle the error here
+      console.error("An error occurred in deleteRow:", error);
+    });
+/*     const { data } = await addItem(rowsUrl, obj)
+    setRows([...rows, obj]); */
   }
   const deleteRow =  (id) => {
     console.log(" deleteRow  id: " + id);
@@ -74,6 +86,8 @@ const FormTableComponents = (props) => {
     getAll(rowsUrl).then((response) => {
       
       setRows(response.data);
+      console.error("ROWS");
+      console.error(response.data);
     }).catch((error) => {
       // Handle the error here
       console.error("An error occurred in getAllRows:", error);
@@ -82,6 +96,8 @@ const FormTableComponents = (props) => {
   const getAllColumns =  () => {
     getAll(clumnsUrl).then((response)=>{
       setClumns(response.data.objectsList);
+      console.error("COLUMNS");
+      console.error(response.data.objectsList);
     }).catch((error) => {
       // Handle the error here
       console.error("An error occurred in getAllRows:", error);

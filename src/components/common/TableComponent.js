@@ -59,14 +59,14 @@ const TableComponent = (props) => {
     console.log(props.columns);
     var newArray = props.columns.map((item) => ({
       ...item,
-      width: 100,
+      width: 200,
       editable: true,
     }));
     newArray = [...newArray, {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
-      width: 100,
+      width: 200,
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -169,14 +169,14 @@ const TableComponent = (props) => {
 
   var newArray = props.columns.map((item) => ({
     ...item,
-    width: 100,
+    width: 150,
     editable: true,
   }));
   newArray = [...newArray, {
     field: 'actions',
     type: 'actions',
     headerName: 'Actions',
-    width: 100,
+    width: 150,
     cellClassName: 'actions',
     getActions: ({ id }) => {
       const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
