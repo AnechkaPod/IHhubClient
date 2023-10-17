@@ -4,14 +4,14 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import TabsComponent from './TabsComponent';
 import { getAll, addItem, updateItem, deleteItem } from '../utils';
-
+const url = "https://localhost:7140/";
 const MainComponent = () => {
 
-  const [value, setValue] = React.useState(1);//setting the first menu id to be maafyanim
+  const [value, setValue] = React.useState(6);//setting the first menu id to be maafyanim
   const [menus, setMenus] = React.useState([]);
   const [subMenus, setSubMenus] = React.useState([]);
   useEffect(() => {
-    getAll("https://localhost:7140/api/Screens/GetMainMenus").then((response) => {
+    getAll(url + "api/Screens/GetMainMenus").then((response) => {
       setMenus(response.data);
       handleMenuChange(null,value);
     });
@@ -19,7 +19,7 @@ const MainComponent = () => {
 
   const handleMenuChange = (event, newValue) => {
     setValue(newValue);
-    getAll("https://localhost:7140/api/Screens/" + newValue).then((response) => {
+    getAll(url + "api/Screens/" + newValue).then((response) => {
       setSubMenus(response.data);
     });
   };
@@ -37,7 +37,7 @@ const MainComponent = () => {
             />
           ))}
         </Tabs>
-        <TabsComponent menus={subMenus} />
+        <TabsComponent url={url} menus={subMenus} />
 
       </Box>
     </div>

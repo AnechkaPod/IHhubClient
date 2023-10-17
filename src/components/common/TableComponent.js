@@ -62,6 +62,11 @@ const TableComponent = (props) => {
       width: 200,
       editable: true,
     }));
+
+    newArray.forEach(element => {
+      element.valueOptions =  ['Market', 'Finance', 'Development'];
+    });
+    
     newArray = [...newArray, {
       field: 'actions',
       type: 'actions',

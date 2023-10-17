@@ -2,12 +2,6 @@ import { useState, useEffect } from 'react'
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import MachshirimComponent from './maafyanimComponents/MachshirimComponent';
-import NechasimComponent from './maafyanimComponents/NechasimComponent';
-import BizuimComponent from './natunimComponents/BizuimComponent';
-import NatuneiShuk from './natunimComponents/NatuneiShukComponent';
-import MatbeotComponent from './maafyanimComponents/MatbeotComponent';
-import BankComponent from './maafyanimComponents/BankComponent';
 import FormTableComponents from './common/FormTableComponents';
 
 function TabsComponent(props) {
@@ -21,10 +15,6 @@ function TabsComponent(props) {
     console.log("menu: ");
     console.log( menu);
     setMenu(menu);
-  /*   console.log(menu.rowsUrl);
-    console.log(menu.columnsUrl);
-    setRowsUrl(menu.rowsUrl);
-    setColumnsUrl(menu.columnsUrl); */
   };
 
   // Log the initial value after the component has mounted
@@ -47,25 +37,14 @@ function TabsComponent(props) {
           aria-label="scrollable auto tabs example">
           {
             props.menus.map((item) => { return <Tab label={item.screenName} value={item.id} /> })
-            /*  props.menus.map((item,index)=>{return  <Tab key={index} label={item} value={item}/>}) */
           }
         </Tabs>
         <div style={{ position: 'relative', width: "100%", height: "100%", backgroundSize: 'cover', padding: 0, margin: 0 }}>
           {
-            <FormTableComponents menu={menu} style={{ position: 'relative', backgroundSize: 'cover', height: "100%", width: "100%", minWidth: "100%", minHight: "100%", backgroundSize: 'cover', padding: 0, margin: 0 }} />
-       }
+            <FormTableComponents url={props.url} menu={menu} style={{ position: 'relative', backgroundSize: 'cover', height: "100%", width: "100%", minWidth: "100%", minHight: "100%", backgroundSize: 'cover', padding: 0, margin: 0 }} />
+          }
         </div>
-
-        {/*           <FormTableComponents rowsUrl={rowsUrl} columnsUrl={columnsUrl}  />
- */}         {/*  <FormTableComponents rowsUrl={rowsUrl} columnsUrl={columnsUrl}  /> */}
-        {/*          {value === "נכסים" && <NechasimComponent/>}
-          {value === "מכשירים" && <MachshirimComponent/>}
-          {value === "ביצועים" && <BizuimComponent/>}
-          {value === "נתוני שוק" && <NatuneiShuk/>}
-          {value === "מטבעות" && <MatbeotComponent/>}
-          {value === "בנקים" && <BankComponent/>} */}
       </Box>
-
     </div>
   )
 }

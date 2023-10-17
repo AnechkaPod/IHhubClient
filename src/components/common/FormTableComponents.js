@@ -26,8 +26,8 @@ const FormTableComponents = (props) => {
 
   useEffect(() => {
     if (props.menu != undefined) {
-      rowsUrl = props.menu.rowsUrl;
-      clumnsUrl = props.menu.columnsUrl;
+      rowsUrl = props.url + props.menu.rowsUrl;
+      clumnsUrl = props.url +props.menu.columnsUrl;
       if (clumnsUrl !== undefined && rowsUrl !== undefined) {
         getAllRows();
         getAllColumns();
@@ -84,10 +84,16 @@ const FormTableComponents = (props) => {
 
   const getAllRows = () => {
     getAll(rowsUrl).then((response) => {
-      
-      setRows(response.data);
-      console.error("ROWS");
+      console.error("ROWS:");
       console.error(response.data);
+
+ var obj = [{id: 1, mutzar: 'מוצר א', kodSugMutzar: {id: 1, label: 'קופות'}, kodMutzarCategory: 1}]      
+ setRows(obj);
+
+
+     // setRows(response.data);
+    
+
     }).catch((error) => {
       // Handle the error here
       console.error("An error occurred in getAllRows:", error);
@@ -95,9 +101,33 @@ const FormTableComponents = (props) => {
   }
   const getAllColumns =  () => {
     getAll(clumnsUrl).then((response)=>{
+
+     
+ /*      response.data.objectsList.forEach(element => {
+        element.valueOptions =  ['Market', 'Finance', 'Development'];
+      });
+ */
       setClumns(response.data.objectsList);
       console.error("COLUMNS");
       console.error(response.data.objectsList);
+      response.data.objectsList.forEach(element => {
+        if(element.type ==="singleSelect")
+        {
+          getAll(element.valueOptionsUrl).then((res)=>{
+            console.log(element);
+            console.log("has single select and the values are");
+            console.log(res.data);
+
+            const valueOptions = res.data.map((item) => ({
+              id: item.id,
+              label: item.sugMutzar,
+            }));
+
+            console.log(valueOptions);
+            element.valueOptions =  valueOptions;
+          });
+        }
+      });
     }).catch((error) => {
       // Handle the error here
       console.error("An error occurred in getAllRows:", error);
