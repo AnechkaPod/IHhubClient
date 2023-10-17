@@ -86,14 +86,8 @@ const FormTableComponents = (props) => {
     getAll(rowsUrl).then((response) => {
       console.error("ROWS:");
       console.error(response.data);
-
- var obj = [{id: 1, mutzar: 'מוצר א', kodSugMutzar: {id: 1, label: 'קופות'}, kodMutzarCategory: 1}]      
- setRows(obj);
-
-
-     // setRows(response.data);
-    
-
+      setRows(response.data);
+   
     }).catch((error) => {
       // Handle the error here
       console.error("An error occurred in getAllRows:", error);
