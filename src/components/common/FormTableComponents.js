@@ -10,7 +10,8 @@ import FormComponent from './FormComponent';
 import TableComponent from './TableComponent';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 var rowsUrl;
 var clumnsUrl;
 
@@ -85,8 +86,11 @@ const FormTableComponents = (props) => {
   const getAllRows = () => {
     getAll(rowsUrl).then((response) => {
       console.error("ROWS:");
-      console.error(response.data);
-      setRows(response.data);
+      console.error(response);
+      var rows = response.data;
+    //  rows[0].kodSugMutzarNavigation = { id : 1, value: "קופות"};
+      console.error(rows);
+      setRows(rows);
    
     }).catch((error) => {
       // Handle the error here
@@ -107,6 +111,9 @@ const FormTableComponents = (props) => {
       response.data.objectsList.forEach(element => {
         if(element.type ==="singleSelect")
         {
+
+    
+
           getAll(element.valueOptionsUrl).then((res)=>{
             console.log(element);
             console.log("has single select and the values are");
@@ -114,11 +121,53 @@ const FormTableComponents = (props) => {
 
             const valueOptions = res.data.map((item) => ({
               id: item.id,
-              label: item.sugMutzar,
+              sugMutzar: item.sugMutzar,
             }));
 
             console.log(valueOptions);
-            element.valueOptions =  valueOptions;
+           // element.valueOptions =  valueOptions;
+
+            //element.valueOptions =  valueOptions.map((role) => role.label)
+/*             element.renderCell = (params) => (
+              <Select value={params.value}
+              onChange={(event) => params.api.setEditCellValue({ id: params.id, field: 'kodSugMutzarNavigation', value: event.target.value })}>
+                {valueOptions.map((op) => (
+                  <MenuItem key={op.value} value={op.value}>
+                      {op.sugMutzar}
+                  </MenuItem>
+                ))}
+              </Select>) */
+
+element.renderCell = (params) => (
+
+  <Select 
+  
+    value={params.row.kodSugMutzarNavigation.id} // Set the value directly
+    onChange={(event) => {
+      console.log("params.row");
+      console.log(params.row);
+      const selectedId = event.target.value;
+    console.log("Selected ID:", selectedId);
+    const selectedOption = valueOptions.find((option) => option.id === selectedId);
+    console.log("Selected Option:", selectedOption);
+
+    if (selectedOption) {
+      const updatedRow = { ...params.row };
+      updatedRow.kodSugMutzarNavigation = selectedOption;
+      updatedRow.kodSugMutzar = selectedId;
+      console.log("Updated Row:", updatedRow);
+      setRows([updatedRow]);
+    }
+    }}
+  >
+    {valueOptions.map((op) => (
+      <MenuItem key={op.id} value={op.id}>
+        {op.sugMutzar}
+      </MenuItem>
+    ))}
+  </Select>
+)
+
           });
         }
       });

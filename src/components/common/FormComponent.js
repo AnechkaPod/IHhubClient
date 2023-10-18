@@ -38,6 +38,7 @@ const FormComponent = (props) => {
     setColumns(props.columns);
     setRaws(props.raws);
     setSelectedOption(props.raws[0]);
+    console.log(" before form mounting");
     const comboFieldWithoutSpaces = props.comboField.replace(/\s/g, '');
     setComboField(comboFieldWithoutSpaces);
     console.log(" after form mounting");
