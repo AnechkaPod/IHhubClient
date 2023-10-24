@@ -27,12 +27,12 @@ function TabsComponent(props) {
       setMenu(menu);
       console.log("menu: " + menu);
     }
-  }, [props]); // Empty dependency array for componentDidMount-like behavior
+  }, [props.menus]); // Empty dependency array for componentDidMount-like behavior
 
   return (
     <div>
       <Box sx={{ width: '100%', bgcolor: 'background.paper', display: 'flex', flexDirection: 'row-reverse' }}>
-        <Tabs value={value} orientation="vertical" onChange={handleMenuChange} centered
+        <Tabs  value={value} orientation="vertical" onChange={handleMenuChange} centered
           scrollButtons="auto"
           aria-label="scrollable auto tabs example">
           {

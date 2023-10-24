@@ -12,29 +12,51 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-var rowsUrl;
-var clumnsUrl;
+
 
 const FormTableComponents = (props) => {
 
   const [formType, setFormType] = React.useState('table');
   const [rows, setRows] = useState([]);
   const [columns, setClumns] = useState([]);
+  //const [primaryKey, setPrimaryKey] = React.useState();
+  
+  const rowsUrl = props.url + props.menu.rowsUrl;
+  const clumnsUrl = props.url + props.menu.columnsUrl;
 
   const handleChange = (val) => {
     setFormType(val);
   };
 
   useEffect(() => {
-    if (props.menu != undefined) {
-      rowsUrl = props.url + props.menu.rowsUrl;
-      clumnsUrl = props.url + props.menu.columnsUrl;
+    if (props.menu !== undefined) {
       if (clumnsUrl !== undefined && rowsUrl !== undefined) {
-        getAllRows();
-        getAllColumns();
+        (async () => {
+          try {
+            
+            const columnsData = await getAllColumns();
+            console.log("Columns data:", columns);
+            const rowsData = await getAllRows(columnsData);
+            // Perform actions after both functions have completed
+            console.log("Rows data:", rowsData);
+
+            var colms = columnsData.filter((item) => item.isPrimaryKey !== true);
+            setClumns(colms);
+  
+            // Your additional code here
+          } catch (error) {
+            // Handle any errors here
+          }
+        })();
       }
     }
   }, [props.menu]);
+  
+  
+  
+  
+  
+  
 
   const addRow = (obj) => {
     console.log("addRow");
@@ -91,86 +113,85 @@ const FormTableComponents = (props) => {
 
   }
 
-  const getAllRows = () => {
-    getAll(rowsUrl).then((response) => {
-      console.log("rows", response.data);
-      setRows(response.data);
-    }).catch((error) => {
-      // Handle the error here
-      console.error("An error occurred in getAllRows:", error);
-    });
-  }
-  const getAllColumns = () => {
-    getAll(clumnsUrl).then((response) => {
-      console.log("columns", response.data.objectsList);
-      response.data.objectsList.forEach(element => {
-        if (element.type === "singleSelect") {
-          /*      if(element.filteringProps!==null&& element.filteringProps!==undefined)
-               {
-                 console.log("ulr" , element.valueOptionsUrl );
-                 console.log("filteringProps" , element.filteringProps );
-                 console.log("element" , element);
-                 element.valueOptionsUrl =element.valueOptionsUrl+"/"+ element.filteringProps+"/";
-                 console.log("element" , element);
-               } */
+  const getAllRows = async (cols) => {
+    if (props.menu.rowsUrl !== undefined) {
+      try {
+        const response = await getAll(rowsUrl);
+        const foundObject = cols.find((item) => item.isPrimaryKey === true);
+        response.data.forEach((element)=>{
+          element.id = element[foundObject.field];
+        })
+        setRows(response.data);
+        return response.data; // Resolve the promise with the retrieved data
+      } catch (error) {
+        console.error("An error occurred in getAllRows:", error);
+        throw error; // Reject the promise with the error
+      }
+    }
+  };
+  
+  const getAllColumns = async () => {
+    if (props.menu.columnsUrl !== undefined) {
+      try {
+        const response = await getAll(clumnsUrl);
 
-          getAll(element.valueOptionsUrl).then((res) => {
+        response.data.objectsList.forEach(async (element) => {
+         
+          if (element.type === "singleSelect") {
+            if (element.valueOptionsUrl) {
+              const res = await getAll(element.valueOptionsUrl);
+              const valueOptions = res.data;
+  
+              element.valueOptions = valueOptions;
+              element.renderEditCell = (params) => (
 
-            console.log("element", element);
-            console.log("element.filteringProps", element.filteringProps);
-            console.log(element.filteringProps==null);
-            console.log("has single select and the values are", res.data);
-            console.log(res.data);
-            var valueOptions = res.data;
-            element.valueOptions = valueOptions;
-            console.log("valueOptions", valueOptions);
-            element.renderEditCell = (params) => (
+                <Select
+                  value={params.value}
+                  onChange={(e) => {
+                    params.api.setEditCellValue({ ...params, value: e.target.value });
+                  }}
+                  fullWidth
+                >
+                  {
+                    element.filteringProps == null || element.filteringProps == undefined ?
+                      valueOptions
+                        //.filter((op) => op.officeNumber === params.row.officeNumber)
+                        .map((role) => (
+                          <MenuItem key={role.id} value={role.id}>
+                            {role[element.optionsPropertyToDisplay]}
+                          </MenuItem>
+                        ))
+                      :
+                      valueOptions
+                        .filter((op) => op[element.filteringProps] === params.row[element.filteringProps])
+                        .map((role) => (
+                          <MenuItem key={role.id} value={role.id}>
+                            {role[element.optionsPropertyToDisplay]}
+                          </MenuItem>
+                        ))
+                  }
+                </Select>
+              );
 
-              <Select
-                value={params.value}
-                onChange={(e) => {
-                  params.api.setEditCellValue({ ...params, value: e.target.value });
-                }}
-                fullWidth
-              >
-                {
-                  element.filteringProps == null || element.filteringProps == undefined ?
-                    valueOptions
-                      //.filter((op) => op.officeNumber === params.row.officeNumber)
-                      .map((role) => (
-                        <MenuItem key={role.id} value={role.id}>
-                          {role[element.optionsPropertyToDisplay]}
-                        </MenuItem>
-                      ))
-                    :
-                    valueOptions
-                      .filter((op) => op[element.filteringProps] === params.row[element.filteringProps])
-                      .map((role) => (
-                        <MenuItem key={role.id} value={role.id}>
-                          {role[element.optionsPropertyToDisplay]}
-                        </MenuItem>
-                      ))
-                }
-              </Select>
-            );
-            element.valueFormatter = (params) => {
-              const role = valueOptions.find((r) => r.id === params.value);
-              return role ? role[element.optionsPropertyToDisplay] : "";
+              element.valueFormatter = (params) => {
+                const role = valueOptions.find((r) => r.id === params.value);
+                return role ? role[element.optionsPropertyToDisplay] : "";
+              }
             }
-            console.log(valueOptions);
+          }
+        });
+  
+       // var colms = response.data.objectsList.filter((item) => item.isPrimaryKey !== true);
+       // setClumns(response.data.objectsList);
+  
 
-          });
-        }
-      });
-      setClumns(response.data.objectsList);
-      console.log("columns", response.data.objectsList);
-    }).catch((error) => {
-      // Handle the error here
-      console.error("An error occurred in getAllRows:", error);
-    });
-
-  }
-
+        return response.data.objectsList; // Resolve the promise with the retrieved columns
+      } catch (error) {
+        console.error("An error occurred in getAllColumns:", error);
+        throw error; // Reject the promise with the error
+      }
+    }
+  };
   return (
 
 

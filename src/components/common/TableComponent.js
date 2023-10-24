@@ -52,7 +52,7 @@ const TableComponent = (props) => {
   useEffect(() => {
 
     console.log("useEffect TableComponent")
-    console.log("props.raws",props.raws)
+    console.log("props.raws", props.raws)
     var newRowaArray = props.raws.map((item) => ({
       ...item,
       isNew: false,
@@ -63,10 +63,10 @@ const TableComponent = (props) => {
       ...item,
       width: 200,
       editable: true,
-    }),[props.raws,props.columns]);
+    }), [props.raws, props.columns]);
 
 
-    
+
     newArray = [...newArray, {
       field: 'actions',
       type: 'actions',
@@ -115,6 +115,15 @@ const TableComponent = (props) => {
     }];
 
   }, [props])
+
+/*   const getRowId = (row) => {
+    console.log("getRowId", props.primaryKey);
+    if (props.primaryKey === undefined)
+      return 0;
+    else
+    return row[props.primaryKey];
+    //return 0;
+  } */
 
   const handleRowEditStop = (params, event) => {
     console.log('handleRowEditStop');
