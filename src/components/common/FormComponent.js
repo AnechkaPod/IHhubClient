@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -68,13 +69,32 @@ const FormComponent = (props) => {
     setSelectedOption(rowBeforChange);
   };
   const handleFieldChange = (field, value) => {
+    console.log("columns");
+    console.log(columns);
+    console.log("select field changed");
     // Create a copy of the selectedOption to avoid mutating state directly
     const updatedSelectedOption = { ...selectedOption };
+    console.log("updatedSelectedOption");
+    console.log(updatedSelectedOption);
+    console.log("selectedOption");
+    console.log(selectedOption);
+    console.log("field");
+    console.log(field);
+    console.log("value");
+    console.log(value);
     updatedSelectedOption[field] = value;
+    console.log("updatedSelectedOption");
+    console.log(updatedSelectedOption);
+   // raws[0] = updatedSelectedOption;
+    const index = raws.findIndex((item) => item.id === updatedSelectedOption.id);
+    raws[index] = updatedSelectedOption;
     setSelectedOption(updatedSelectedOption);
+    console.log("raws");
+    console.log(raws);
   };
 
   const OnSave = () => {
+    console.log("OnSave");
     console.log(selectedOption);
     if (addMode === true)
       props.addRow(selectedOption);
@@ -123,14 +143,13 @@ const FormComponent = (props) => {
         </div>
       )}
       {addMode == false &&
-        <Select style={{ width: '200px' }} value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)}>
+        <Select style={{ width: '200px' }} value={selectedOption} onChange={(e) => {setSelectedOption(e.target.value); }}>
           {
             raws.map((raw) => (
               <MenuItem value={raw}>{raw[comboField]}</MenuItem >
             ))}
         </Select>}
-      {/*       {addMode == true && 
-        <TextField id="outlined-basic" style={{ width: '200px' }} value={setSelectedOption.kod_Matbea} />} */}
+      
 
       <Box style={{
         position: 'absolute',
@@ -151,7 +170,7 @@ const FormComponent = (props) => {
             var fieldValue = selectedOption && selectedOption[item.field] !== null ? selectedOption[item.field] : '';
 
             return (
-              item.field !== "id" && <TextField
+              item.field !== "id" && (item.type=="string"||item.type=="number")  && <TextField
                 required
                 type={item.type}
                 key={index}
@@ -160,6 +179,24 @@ const FormComponent = (props) => {
                 value={fieldValue} // Use the 'value' prop here
                 onChange={(e) => handleFieldChange(item.field, e.target.value)}
               />
+              ||
+              item.field !== "id" && (item.type=="singleSelect")  && <Select
+              key={index}
+              style={{
+                margin: '8px', // Adjust the margin as needed
+                width: '200px', // Adjust the width as needed
+              }}
+              id="outlined-required"
+              label={item.headerName}
+              value={fieldValue} // Use the 'value' prop here
+              onChange={(e) => handleFieldChange(item.field, e.target.value)}
+            >
+               {item.valueOptions.map((role) => (
+                  <MenuItem key={role.id} value={role.id}>
+                    {role[item.optionsPropertyToDisplay] }
+                  </MenuItem>
+                ))}
+              </Select>
             );
           })}
         </div>

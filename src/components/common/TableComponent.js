@@ -51,6 +51,8 @@ const TableComponent = (props) => {
 
   useEffect(() => {
 
+    console.log("useEffect TableComponent")
+    console.log("props.raws",props.raws)
     var newRowaArray = props.raws.map((item) => ({
       ...item,
       isNew: false,
@@ -61,11 +63,9 @@ const TableComponent = (props) => {
       ...item,
       width: 200,
       editable: true,
-    }));
+    }),[props.raws,props.columns]);
 
-    newArray.forEach(element => {
-      element.valueOptions =  ['Market', 'Finance', 'Development'];
-    });
+
     
     newArray = [...newArray, {
       field: 'actions',

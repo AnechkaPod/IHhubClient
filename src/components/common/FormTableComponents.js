@@ -57,6 +57,21 @@ const FormTableComponents = (props) => {
     });
   }
   const updateRow = (obj) => {
+    console.log("updateRow object:", obj);
+
+    //for ech object with select, if the select was updated we
+    //need to update the coresponding navigation property
+    columns.forEach(element => {
+      if (element.type === "singleSelect") {
+        console.log("element:", element);
+        const valueOptionsindex = element.valueOptions.findIndex((item) => item.id === obj[element.field]);
+        console.log("valueOptionsindex:", valueOptionsindex);
+        obj[element.field + "Navigation"] = element.valueOptions[valueOptionsindex];
+        console.log("object after navigation update:", obj);
+      }
+    });
+
+
     updateItem(rowsUrl, obj.id, obj).then(() => {
       const itemIndex = rows.findIndex((item) => item.id === obj.id);
       //set the updated matbea in array
@@ -78,12 +93,8 @@ const FormTableComponents = (props) => {
 
   const getAllRows = () => {
     getAll(rowsUrl).then((response) => {
-      console.error("ROWS:");
-      console.error(response);
-      var rows = response.data;
-      console.error(rows);
-      setRows(rows);
-
+      console.log("rows", response.data);
+      setRows(response.data);
     }).catch((error) => {
       // Handle the error here
       console.error("An error occurred in getAllRows:", error);
@@ -91,42 +102,68 @@ const FormTableComponents = (props) => {
   }
   const getAllColumns = () => {
     getAll(clumnsUrl).then((response) => {
-      setClumns(response.data.objectsList);
-      console.error("COLUMNS");
-      console.error(response.data.objectsList);
+      console.log("columns", response.data.objectsList);
       response.data.objectsList.forEach(element => {
         if (element.type === "singleSelect") {
+          /*      if(element.filteringProps!==null&& element.filteringProps!==undefined)
+               {
+                 console.log("ulr" , element.valueOptionsUrl );
+                 console.log("filteringProps" , element.filteringProps );
+                 console.log("element" , element);
+                 element.valueOptionsUrl =element.valueOptionsUrl+"/"+ element.filteringProps+"/";
+                 console.log("element" , element);
+               } */
+
           getAll(element.valueOptionsUrl).then((res) => {
-            console.log(element);
-            console.log("has single select and the values are");
+
+            console.log("element", element);
+            console.log("element.filteringProps", element.filteringProps);
+            console.log(element.filteringProps==null);
+            console.log("has single select and the values are", res.data);
             console.log(res.data);
             var valueOptions = res.data;
             element.valueOptions = valueOptions;
+            console.log("valueOptions", valueOptions);
             element.renderEditCell = (params) => (
+
               <Select
                 value={params.value}
-                onChange={(e) =>{
-                  console.log("combo changed");
-                  params.api.setEditCellValue({ ...params, value: e.target.value })
+                onChange={(e) => {
+                  params.api.setEditCellValue({ ...params, value: e.target.value });
                 }}
                 fullWidth
               >
-                {valueOptions.map((role) => (
-                  <MenuItem key={role.id} value={role.id}>
-                    {role.sugMutzar}
-                  </MenuItem>
-                ))}
+                {
+                  element.filteringProps == null || element.filteringProps == undefined ?
+                    valueOptions
+                      //.filter((op) => op.officeNumber === params.row.officeNumber)
+                      .map((role) => (
+                        <MenuItem key={role.id} value={role.id}>
+                          {role[element.optionsPropertyToDisplay]}
+                        </MenuItem>
+                      ))
+                    :
+                    valueOptions
+                      .filter((op) => op[element.filteringProps] === params.row[element.filteringProps])
+                      .map((role) => (
+                        <MenuItem key={role.id} value={role.id}>
+                          {role[element.optionsPropertyToDisplay]}
+                        </MenuItem>
+                      ))
+                }
               </Select>
             );
             element.valueFormatter = (params) => {
               const role = valueOptions.find((r) => r.id === params.value);
-              return role ? role.sugMutzar : "";
+              return role ? role[element.optionsPropertyToDisplay] : "";
             }
             console.log(valueOptions);
 
           });
         }
       });
+      setClumns(response.data.objectsList);
+      console.log("columns", response.data.objectsList);
     }).catch((error) => {
       // Handle the error here
       console.error("An error occurred in getAllRows:", error);
