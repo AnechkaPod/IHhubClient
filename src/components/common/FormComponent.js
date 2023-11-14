@@ -68,29 +68,26 @@ const FormComponent = (props) => {
     setAddMode(false);
     setSelectedOption(rowBeforChange);
   };
-  const handleFieldChange = (field, value) => {
-    console.log("columns");
-    console.log(columns);
-    console.log("select field changed");
+  const handleFieldChange = (item, value) => {
+    console.log("handleFieldChange");
+    console.log("columns", columns);
     // Create a copy of the selectedOption to avoid mutating state directly
     const updatedSelectedOption = { ...selectedOption };
-    console.log("updatedSelectedOption");
-    console.log(updatedSelectedOption);
-    console.log("selectedOption");
-    console.log(selectedOption);
-    console.log("field");
-    console.log(field);
-    console.log("value");
-    console.log(value);
-    updatedSelectedOption[field] = value;
-    console.log("updatedSelectedOption");
-    console.log(updatedSelectedOption);
-   // raws[0] = updatedSelectedOption;
-    const index = raws.findIndex((item) => item.id === updatedSelectedOption.id);
+    console.log("updatedSelectedOption", updatedSelectedOption);
+    console.log("selectedOption", selectedOption);
+    console.log("itemmm", item);
+    console.log("value", value);   //the id
+    updatedSelectedOption[item] = value;
+    if (item.valueOptions !== undefined) {
+      const selectedValueOp = item.valueOptions.find((r) => r.id === value);
+
+      updatedSelectedOption[item + "Navigation"] = selectedValueOp;
+    }
+
+    const index = raws.findIndex((i) => i.id === updatedSelectedOption.id);
     raws[index] = updatedSelectedOption;
     setSelectedOption(updatedSelectedOption);
-    console.log("raws");
-    console.log(raws);
+
   };
 
   const OnSave = () => {
@@ -105,7 +102,7 @@ const FormComponent = (props) => {
   }
 
   return (
-    <div style={{ position: 'relative', width: "100%" }}>
+    <div>
 
       {addMode == false &&
         <Button color="primary" startIcon={<DeleteIcon />} style={{
@@ -142,35 +139,44 @@ const FormComponent = (props) => {
           </Button>
         </div>
       )}
-      {addMode == false &&
-        <Select style={{ width: '200px' }} value={selectedOption} onChange={(e) => {setSelectedOption(e.target.value); }}>
+
+
+
+      <Box    sx={{
+        background:"white",
+        margin: '0 auto',  // Center the Box horizontally
+        height: 500,
+        width: '90%',
+        '& .actions': {
+          color: 'text.secondary',
+        },
+        '& .textPrimary': {
+          color: 'text.primary',
+        },
+      }} 
+
+        component="form"
+
+  
+        noValidate
+        autoComplete="off"
+      >
+
+
+        
+              {addMode == false &&
+        <Select style={{ width: '200px' }} value={selectedOption} onChange={(e) => { setSelectedOption(e.target.value); }}>
           {
             raws.map((raw) => (
               <MenuItem value={raw}>{raw[comboField]}</MenuItem >
             ))}
         </Select>}
-      
-
-      <Box style={{
-        position: 'absolute',
-        top: 70,
-        right: 0,
-        margin: 0
-      }}
-        component="form"
-
-        sx={{
-          '& .MuiTextField-root': { m: 1, width: '25ch' },
-        }}
-        noValidate
-        autoComplete="off"
-      >
         <div>
           {columns.map((item, index) => {
             var fieldValue = selectedOption && selectedOption[item.field] !== null ? selectedOption[item.field] : '';
 
             return (
-              item.field !== "id" && (item.type=="string"||item.type=="number")  && <TextField
+              item.field !== "id" && (item.type == "string" || item.type == "number") && <TextField
                 required
                 type={item.type}
                 key={index}
@@ -180,22 +186,52 @@ const FormComponent = (props) => {
                 onChange={(e) => handleFieldChange(item.field, e.target.value)}
               />
               ||
-              item.field !== "id" && (item.type=="singleSelect")  && <Select
-              key={index}
-              style={{
-                margin: '8px', // Adjust the margin as needed
-                width: '200px', // Adjust the width as needed
-              }}
-              id="outlined-required"
-              label={item.headerName}
-              value={fieldValue} // Use the 'value' prop here
-              onChange={(e) => handleFieldChange(item.field, e.target.value)}
-            >
-               {item.valueOptions.map((role) => (
-                  <MenuItem key={role.id} value={role.id}>
-                    {role[item.optionsPropertyToDisplay] }
-                  </MenuItem>
-                ))}
+              item.field !== "id" && (item.type == "singleSelect") &&
+              <Select
+                key={index}
+                style={{
+                  margin: '8px', // Adjust the margin as needed
+                  width: '200px', // Adjust the width as needed
+                }}
+                id="outlined-required"
+                label={item.headerName}
+                value={fieldValue} // Use the 'value' prop here
+                onChange={(e) => {
+                  console.log("---------onChange------");
+                  console.log("item", item);
+                  console.log("e", e);
+                  handleFieldChange(item, e.target.value);
+
+                }}
+              >
+                {
+                  /*  item.valueOptions.map((role) => (
+                      <MenuItem key={role.id} value={role.id}>
+                        {role[item.optionsPropertyToDisplay] }
+                      </MenuItem>
+    
+    
+    
+                    )) */
+
+                  item.filteringProps == null || item.filteringProps == undefined
+                    ?
+                    item.valueOptions
+
+                      .map((role) => (
+
+                        <MenuItem key={role.id} value={role.id}>
+                          {role[item.optionsPropertyToDisplay]}
+                        </MenuItem>
+                      )) :
+                    item.valueOptions
+                      .filter((op) => op[item.filteringProps] === selectedOption[item.filteringProps])
+                      .map((role) => (
+                        <MenuItem key={role.id} value={role.id}>
+                          {role[item.optionsPropertyToDisplay]}
+                        </MenuItem>
+                      ))
+                }
               </Select>
             );
           })}

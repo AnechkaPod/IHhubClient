@@ -7,6 +7,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
+// Import the ThemeProvider from Material-UI
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   GridRowModes,
   DataGrid,
@@ -50,9 +52,6 @@ const TableComponent = (props) => {
   const [rowModesModel, setRowModesModel] = React.useState({});
 
   useEffect(() => {
-
-    console.log("useEffect TableComponent")
-    console.log("props.raws", props.raws)
     var newRowaArray = props.raws.map((item) => ({
       ...item,
       isNew: false,
@@ -116,14 +115,7 @@ const TableComponent = (props) => {
 
   }, [props])
 
-/*   const getRowId = (row) => {
-    console.log("getRowId", props.primaryKey);
-    if (props.primaryKey === undefined)
-      return 0;
-    else
-    return row[props.primaryKey];
-    //return 0;
-  } */
+
 
   const handleRowEditStop = (params, event) => {
     console.log('handleRowEditStop');
@@ -163,9 +155,8 @@ const TableComponent = (props) => {
   };
 
   const processRowUpdate = (newRow) => {
-    console.log('processRowUpdate');
+    console.log('processRowUpdateee newRow',newRow);
 
-    console.log(newRow);
     if (newRow.isNew === false)
       props.updateRow(newRow);
     else
@@ -186,7 +177,7 @@ const TableComponent = (props) => {
     width: 150,
     editable: true,
   }));
-  newArray = [...newArray, {
+  newArray = [{
     field: 'actions',
     type: 'actions',
     headerName: 'Actions',
@@ -231,13 +222,20 @@ const TableComponent = (props) => {
         />,
       ];
     },
-  }];
+  },...newArray];
+
+  const theme = createTheme({
+    direction: 'rtl',
+  });
 
   return (
+    <ThemeProvider theme={theme}>
     <Box
       sx={{
+        background:"white",
+        margin: '0 auto',  // Center the Box horizontally
         height: 500,
-        width: '100%',
+        width: '90%',
         '& .actions': {
           color: 'text.secondary',
         },
@@ -262,6 +260,7 @@ const TableComponent = (props) => {
         }}
       />
     </Box>
+    </ThemeProvider>
   );
 }
 
