@@ -234,7 +234,7 @@ const TableComponent = (props) => {
       sx={{
         background:"white",
         margin: '0 auto',  // Center the Box horizontally
-        height: 500,
+        height: '1000px',
         width: '90%',
         '& .actions': {
           color: 'text.secondary',
@@ -245,6 +245,7 @@ const TableComponent = (props) => {
       }}
     >
       <DataGrid
+      sx={{minHeight:'100%'}}
         rows={rows}
         columns={newArray}
         editMode="row"

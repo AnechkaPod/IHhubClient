@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
-const bitzuimComponent = () => {
+const BitzuimComponent = () => {
   return (
     <div>bitzuimComponent</div>
-  )
-}
+  );
+};
 
-export default bitzuimComponent
+export default BitzuimComponent;

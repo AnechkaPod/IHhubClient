@@ -3,6 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import TabsComponent from './TabsComponent';
+import logo from '../sources/logo-blue.png';
 import { getAll, addItem, updateItem, deleteItem } from '../utils';
 const url = "https://localhost:7140/";
 const MainComponent = () => {
@@ -15,9 +16,9 @@ const MainComponent = () => {
     getAll(url + "api/Screens/GetMainMenus").then((response) => {
       setMenus(response.data);
       var mains = response.data.find(menu => menu.id == mainScreenID);
-      console.log("mains",mains);
+      console.log("mains", mains);
       setMainScreen(mains);
-      handleMenuChange(null,mainScreenID);
+      handleMenuChange(null, mainScreenID);
     });
   }, [])
 
@@ -31,21 +32,33 @@ const MainComponent = () => {
 
   return (
     <div>
-      <h2>IHub</h2>
-      <Box sx={{ width: '100%' }}>
+    <Box
+      sx={{
+        margin: '0 auto',  // Center the Box horizontally
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'space-between', // Spread the content to both ends
+        alignItems: 'center',
+      }}
+    >
+      <div style={{ flex: 1 }}>
         <Tabs value={mainScreenID} onChange={handleMenuChange} centered>
           {menus.map((menu) => (
             <Tab
               label={menu.screenName}
-              value={menu.id} // Set the value to menu.id
+              value={menu.id}
               key={menu.id}
             />
           ))}
         </Tabs>
-        <TabsComponent url={url} menus={subMenus} mainScreen={mainScreen}/>
-
-      </Box>
-    </div>
+      </div>
+      <div>
+        <img src={logo} alt="Logo" style={{ width: 180 }} />
+      </div>
+    </Box>
+    <TabsComponent url={url} menus={subMenus} mainScreen={mainScreen} />
+  </div>
   )
 }
 
