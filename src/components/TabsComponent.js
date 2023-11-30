@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import FormTableComponents from './common/FormTableComponents';
 import BitzuimComponent from './natunim/BitzuimComponent';
 import TnuotComponent from './tnuot/TnuotComponent';
+import IshurTnuotComponent from './tnuot/IshurTnuotComponent';
 
 function TabsComponent(props) {
   const [value, setValue] = useState(15);
@@ -51,34 +52,41 @@ function TabsComponent(props) {
   };
 
   return (
-<div style={{ height: '100%', backgroundColor: 'green' }}>
-  <html style={{ height: '100%', minHeight: '100%', backgroundColor: 'yellow' }}>
-    <body style={{ height: '100%', margin: 0, minHeight: '100%' }}>
-      <Box sx={{ width: '100%', bgcolor: 'yellow', display: 'flex', flexDirection: 'row-reverse', height: '100%', minHeight: '100%' }}>
-        <Tabs sx={{ background: '#66bcb4', color: 'white !important', width: '135px' }} value={value} orientation="vertical" onChange={handleMenuChange} centered
-          scrollButtons="auto"
-          color="white"
-          aria-label="scrollable auto tabs example">
-          {props.menus.map((item) => <Tab sx={{ color: 'white !important' }} label={item.screenName} value={item.id} />)}
-        </Tabs>
-        <div style={{ position: 'relative', width: '100%' }}>
-          {menu?.isDataEntry === true &&
-            <FormTableComponents url={props.url} menu={menu} style={{ position: 'relative', backgroundSize: 'cover', width: '100%', height: '100%', backgroundSize: 'cover', padding: 0, margin: 0 ,minHeight:'100%'}} />
-          }
-  {menu?.isDataEntry !== true && menu?.id===17 &&
-           <BitzuimComponent></BitzuimComponent>
-          }
-            {menu?.isDataEntry !== true && menu?.id===23 &&
-           <TnuotComponent></TnuotComponent>
-          }
-          {menu?.isDataEntry !== true && menu?.id!=17 &&
-            <div>menu.id is {menu?.id} menunameis: {menu?.screenName}</div>
-          }
-        </div>
-      </Box>
-    </body>
-  </html>
-</div>
+    <div style={{ height: '100%', backgroundColor: 'green' }}>
+      <html style={{ height: '100%', minHeight: '100%', backgroundColor: 'yellow' }}>
+        <body style={{ height: '100%', margin: 0, minHeight: '100%' }}>
+          <Box sx={{ width: '100%', bgcolor: 'yellow', display: 'flex', flexDirection: 'row-reverse', height: '100%', minHeight: '100%' }}>
+            <Tabs sx={{ background: '#66bcb4', color: 'white !important', width: '135px' }} value={value} orientation="vertical" onChange={handleMenuChange} centered
+              scrollButtons="auto"
+              color="white"
+              aria-label="scrollable auto tabs example">
+              {props.menus.map((item) => <Tab sx={{ color: 'white !important' }} label={item.screenName} value={item.id} />)}
+            </Tabs>
+            <div style={{ position: 'relative', width: '100%' }}>
+              {menu?.isDataEntry === true &&
+                <FormTableComponents url={props.url} menu={menu} style={{ position: 'relative', backgroundSize: 'cover', width: '100%', height: '100%', backgroundSize: 'cover', padding: 0, margin: 0, minHeight: '100%' }} />
+              }
+              {
+                menu?.isDataEntry !== true && menu?.id === 17 &&
+                <BitzuimComponent></BitzuimComponent>
+              }
+              {
+                menu?.isDataEntry !== true && menu?.id === 23 &&
+                <TnuotComponent></TnuotComponent>
+              }
+                 {
+                menu?.isDataEntry !== true && menu?.id === 24 &&
+                <IshurTnuotComponent></IshurTnuotComponent>
+              }
+              {
+                menu?.isDataEntry !== true && menu?.id != 17 &&
+                <div>menu.id is {menu?.id} menunameis: {menu?.screenName}</div>
+              }
+            </div>
+          </Box>
+        </body>
+      </html>
+    </div>
   )
 }
 
