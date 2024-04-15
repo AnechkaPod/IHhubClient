@@ -6,18 +6,24 @@ import FormTableComponents from './common/FormTableComponents';
 import BitzuimComponent from './natunim/BitzuimComponent';
 import TnuotComponent from './tnuot/TnuotComponent';
 import IshurTnuotComponent from './tnuot/IshurTnuotComponent';
+//import { app, BrowserWindow, ipcMain } from 'electron';
 
 function TabsComponent(props) {
   const [value, setValue] = useState(15);
   const [menu, setMenu] = useState({});
-
+  const [menus, setMenus] = useState();
   // Log the initial value after the component has mounted
   useEffect(() => {
     console.log('props.mainScreen', props.mainScreen);
+
+    // ipcMain.on('get-windows-user', (event) => {
+    //   const username = require('os').userInfo().username;
+    //   console.log("username",username);
+    // });
     //console.log('defaultScreenId subscreen id:', props.mainScreen.defaultScreenId);
     console.log('Initial value:', value);
     if (props !== null && props.menus.length > 0) {
-      console.log(props.menus);
+      console.log("props.menus",props.menus);
       var m;
       if (props.mainScreen) {
 
@@ -60,7 +66,9 @@ function TabsComponent(props) {
               scrollButtons="auto"
               color="white"
               aria-label="scrollable auto tabs example">
-              {props.menus.map((item) => <Tab sx={{ color: 'white !important' }} label={item.screenName} value={item.id} />)}
+              {
+              props.menus.map((item) => <Tab sx={{ color: 'white !important' }} label={item.screenName} value={item.id} />)
+              }
             </Tabs>
             <div style={{ position: 'relative', width: '100%' }}>
               {menu?.isDataEntry === true &&
