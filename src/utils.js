@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+axios.defaults.withCredentials = true;
+
 const getAll = (url) => axios.get(url, { withCredentials: true });
 
 const getById = (url, id) => axios.get(`${url}/${id}`);
