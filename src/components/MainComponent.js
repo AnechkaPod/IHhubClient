@@ -5,21 +5,25 @@ import Box from '@mui/material/Box';
 import TabsComponent from './TabsComponent';
 import logo from '../sources/logo-blue.png';
 import { getAll, addItem, updateItem, deleteItem } from '../utils';
-const url = "https://localhost:7140/";
+const url = "http://localhost:5245/";
+//const url = "http://trd-bi:8080/";
+//localhost:7140
 const MainComponent = () => {
-
+  //const url =API_URL;
   const [mainScreenID, setMainScreenID] = React.useState(6);//setting the first menu id to be maafyanim
   const [mainScreen, setMainScreen] = React.useState({});
   const [menus, setMenus] = React.useState([]);
   const [subMenus, setSubMenus] = React.useState([]);
   useEffect(() => {
-    getAll(url + "api/Screens/GetMainMenus").then((response) => {
-      setMenus(response.data);
-      var mains = response.data.find(menu => menu.id == mainScreenID);
-      console.log("mains", mains);
-      setMainScreen(mains);
-      handleMenuChange(null, mainScreenID);
-    });
+    console.log("url",url);
+
+     getAll(url + "api/Screens/GetMainMenus").then((response) => {
+       setMenus(response.data);
+       var mains = response.data.find(menu => menu.id == mainScreenID);
+       console.log("mains", mains);
+       setMainScreen(mains);
+       handleMenuChange(null, mainScreenID);
+     });
   }, [])
 
   const handleMenuChange = (event, newValue) => {
@@ -43,6 +47,7 @@ const MainComponent = () => {
       }}
     >
       <div style={{ flex: 1 }}>
+  
         <Tabs value={mainScreenID} onChange={handleMenuChange} centered>
           {menus.map((menu) => (
             <Tab
@@ -57,6 +62,8 @@ const MainComponent = () => {
         <img src={logo} alt="Logo" style={{ width: 180 }} />
       </div>
     </Box>
+  
+  
     <TabsComponent url={url} menus={subMenus} mainScreen={mainScreen} />
   </div>
   )
