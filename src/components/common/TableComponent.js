@@ -23,6 +23,7 @@ import {
   randomId,
   randomArrayItem,
 } from '@mui/x-data-grid-generator';
+import { ClosedCaptionDisabledSharp } from '@mui/icons-material';
 
 
 function EditToolbar(props) {
@@ -50,6 +51,7 @@ function EditToolbar(props) {
 const TableComponent = (props) => {
   const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     var newRowaArray = props.raws.map((item) => ({
@@ -58,10 +60,12 @@ const TableComponent = (props) => {
     }));
     setRows(newRowaArray);
     console.log(props.columns);
+    
     var newArray = props.columns.map((item) => ({
       ...item,
       width: 200,
       editable: true,
+      
     }), [props.raws, props.columns]);
 
 
@@ -112,6 +116,8 @@ const TableComponent = (props) => {
         ];
       },
     }];
+
+   
 
   }, [props])
 
@@ -171,7 +177,7 @@ const TableComponent = (props) => {
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
-
+  
   var newArray = props.columns.map((item) => ({
     ...item,
     width: 150,

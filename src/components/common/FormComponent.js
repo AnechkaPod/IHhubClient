@@ -102,25 +102,54 @@ const FormComponent = (props) => {
   }
 
   return (
-    <div>
+    <div >
+      <Box   
+       sx={{
+        background: "white",
+        margin: "0 auto",
+        height: 500,
+        width: "90%",
+        position: "relative", // Make the box position relative
+        "& .actions": {
+          color: "text.secondary",
+        },
+        "& .textPrimary": {
+          color: "text.primary",
+        },
+      }}
 
+        component="form"
+
+  
+        noValidate
+        autoComplete="off"
+      >
       {addMode == false &&
         <Button color="primary" startIcon={<DeleteIcon />} style={{
-          position: 'absolutey',
+          backgroundColor:'transparent',
+          position: 'absolute',
           top: 0,
-          right: 226,
+          left: 0,
         }} onClick={DeleteRow}>
           Delete record
         </Button>}
-      {addMode == false &&
-        <Button color="primary" startIcon={<AddIcon />} style={{
+        {addMode == false &&
+        <Button color="primary" startIcon={<AddIcon />}
+        disabled={addMode || raws.some(raw => columns.some(column => column.required && !selectedOption[column.field]))}
+         style={{
+          backgroundColor:'transparent',
           position: 'absolute',
           top: 0,
           right: 85,
         }} onClick={AddRaw}>
           Add record
         </Button>}
-      <Button onClick={OnSave} color="primary" startIcon={<SaveIcon />} style={{
+      <Button onClick={OnSave} color="primary" startIcon={<SaveIcon />}
+        disabled={addMode || raws.some(raw => columns.some(column => column.required && !selectedOption[column.field]))}
+
+      
+      style={{
+         backgroundColor:'transparent',
         position: 'absolute',
         top: 0,
         right: 0,
@@ -131,37 +160,16 @@ const FormComponent = (props) => {
         <div style={{ position: 'absolute', top: 0, right: 0 }}>
 
           <Button color="primary" startIcon={<CancelIcon />} onClick={CanelAddRaw} style={{
+            backgroundColor:'transparent',
             position: 'absolute',
             top: 0,
             right: 85,
+
           }}>
             Cancel
           </Button>
         </div>
       )}
-
-
-
-      <Box    sx={{
-        background:"white",
-        margin: '0 auto',  // Center the Box horizontally
-        height: 500,
-        width: '90%',
-        '& .actions': {
-          color: 'text.secondary',
-        },
-        '& .textPrimary': {
-          color: 'text.primary',
-        },
-      }} 
-
-        component="form"
-
-  
-        noValidate
-        autoComplete="off"
-      >
-
 
         
               {addMode == false &&
@@ -176,8 +184,9 @@ const FormComponent = (props) => {
             var fieldValue = selectedOption && selectedOption[item.field] !== null ? selectedOption[item.field] : '';
 
             return (
-              item.field !== "id" && (item.type == "string" || item.type == "number") && <TextField
-                required
+              item.field !== "id" && (item.type == "string" || item.type == "number") && <TextField style={{margin:'10px'}}
+                required={item.required}
+                error={item.required && (fieldValue=="")}
                 type={item.type}
                 key={index}
                 id="outlined-required"

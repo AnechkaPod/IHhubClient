@@ -36,3 +36,50 @@
     transform: rotate(360deg);
   }
 }
+
+header {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.menu-button {
+  box-shadow: 0px 10px 30px 0px rgba(82, 63, 105, 0.05);
+  color: #000;
+  padding: 15px 0px;
+  margin-left: -20px;
+  border: none;
+  cursor: pointer;
+  background-color: white;
+}
+.menu-button:hover {
+font-weight: bold;
+  color: #6ab1b8;
+}
+ul {
+  list-style: none;
+  padding: unset;
+  margin: unset;
+}
+
+li {
+  padding: 14px;
+  transition: all linear 0.3s;
+}
+
+li:hover {
+  background: #6ab1b8;
+  cursor: pointer;
+  color: #fff;
+}
+
+.dropdown-menu {
+  box-shadow: 3px 3px 3px 3px rgba(82, 63, 105, 0.1);
+  transition: all linear 0.3s;
+  position: absolute;
+  top: 100%;
+  left: -20px; /* Adjust this value as needed */
+}

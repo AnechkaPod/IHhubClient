@@ -173,7 +173,6 @@ const FormTableComponents = (props) => {
 
 
     <div style={{
-      background:"white",
       margin: '0 auto',  // Center the Box horizontally
       height:  '100%',
       minHeight:  '100%',
